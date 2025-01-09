@@ -19,7 +19,6 @@ results/
 tmp/*
 dataset_comparison/*
 /Proc_*
-/*.csv
 train_log
 .proc-ltsosfsd/*
 .numba_cache/*
