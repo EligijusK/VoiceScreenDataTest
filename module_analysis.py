@@ -69,6 +69,10 @@ opath_csv = "%s.csv" % opath
 if not os.path.exists(os.path.dirname(opath_csv)):
     os.mkdir(os.path.dirname(opath_csv))
 
+file_exists = os.path.exists(opath_csv)
+if file_exists:
+    os.remove(opath_csv)
+
 arr = os.listdir(dirPath)
 for index in arr:
     fpath = dirPath + index + "/oz.wav"

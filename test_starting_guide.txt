@@ -1,0 +1,20 @@
+If python in environment doesn't work create new environment
+
+There are one library that is from GitHub
+installation guide for custom library:
+
+1. open terminal in environment
+2. In terminal navigate to folder library (pycochleagram)
+3. install library in environment with this command: python setup.py install
+
+Install all libraries from win-requirements.txt
+example: pip install certifi==2021.10.8
+I need mention one more things when installing libraries if it is possible install torch library with cuda
+
+Setup server and test it self:
+
+2. fetch and pull everything with git lfs
+3. If server environment doesn't work create new venv for server
+4. install libraries for server
+5. launch server
+6. start app.py
