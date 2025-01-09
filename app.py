@@ -15,11 +15,8 @@ def createDirectory(path):
 
 
 def file():
-
-
-
     arr = os.listdir("./voice")
-    arrData= []
+    arrData = []
 
     for i in arr:
         voice = wave.open("./voice/" + i + "/oz.wav", "rb")
@@ -46,8 +43,8 @@ def file():
     df = pd.json_normalize(arrData)
     df.to_csv('employees.csv', mode='a', header=False)
 
-def merge_json_by_id():
 
+def merge_json_by_id():
     database_df = pd.read_csv('./Database.csv')
     # database_df[''] = None
     employees_df = pd.read_csv('./employees.csv')
@@ -56,7 +53,6 @@ def merge_json_by_id():
 
     # Merge the two datasets on 'Patient no.' using an inner join
     merged_inner = pd.merge(database_df, employees_df, on='Patient no.', how='inner')
-
 
     columns_to_include_AVQI = [
         'Patient no.',
@@ -79,7 +75,7 @@ def merge_json_by_id():
         'GFI Result',
     ]
 
-    header = [[],[]]
+    header = [[], []]
     index = 0
     for column in columns_to_include_AVQI:
         if index == math.trunc(len(columns_to_include_AVQI) / 2):
@@ -125,8 +121,24 @@ def merge_json_by_id():
 
     print(f"Inner final merge saved to: {merged_final_path}")
 
+
 if __name__ == "__main__":
-    # file()
-    merge_json_by_id()
-
-
+    argumentArray = ["StrippedNetworkClass",
+                 "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1653211992/file_copies"
+                 "/network",
+                 "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1653211992/settings.json",
+                 "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1653211992"
+                 "/model_best_test.pth",
+                 "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1647178662/file_copies"
+                 "/network",
+                 "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1647178662/settings.json",
+                 "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1647178662"
+                 "/model_best_test.pth",
+                 "C:/Users/eligijus/Documents/Projektai/voice/",
+                 "Proc_001"
+                 ]
+    arguments = ' '.join(argumentArray)
+    print(' '.join(arguments))
+    os.system("module_analysis.py " + arguments)
+    # file() # serveris turi buti pajungtas
+    # merge_json_by_id()
