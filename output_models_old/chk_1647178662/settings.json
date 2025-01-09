@@ -1,0 +1,5 @@
+{
+    "learning_rate": 1e-07,
+    "class_count": 4,
+    "model": "ModelIndex"
+}

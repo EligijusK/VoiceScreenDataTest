@@ -7,6 +7,7 @@ import requests
 import wave
 import pandas as pd
 from requests import session
+import math
 
 
 def createDirectory(path):
@@ -35,7 +36,7 @@ def file():
         }
 
         start = time.time()
-        request = requests.post('http://127.0.0.1:5000/AVQI', json = data)
+        request = requests.post('http://127.0.0.1:5000/AVQI', json=data)
         end = time.time()
         length = end - start
         jsonData = request.json()
@@ -47,17 +48,17 @@ def file():
 
 def merge_json_by_id():
 
-    df = pd.read_csv(r'./Database.csv')
-    df2 = pd.read_csv(r'./employees.csv')
-
     database_df = pd.read_csv('./Database.csv')
+    # database_df[''] = None
     employees_df = pd.read_csv('./employees.csv')
+    # employees_df[''] = None
+    proc_df = pd.read_csv('./Proc_001.csv')
 
     # Merge the two datasets on 'Patient no.' using an inner join
     merged_inner = pd.merge(database_df, employees_df, on='Patient no.', how='inner')
 
-    print(employees_df)
-    columns_to_include = [
+
+    columns_to_include_AVQI = [
         'Patient no.',
         'AVQI',
         'cpps',
@@ -68,24 +69,64 @@ def merge_json_by_id():
         'ltasSlope',
         'ltasTreadTilt',
         'timeTook',
+    ]
+
+    columns_to_include_GFI = [
         'GFI 1',
         'GFI 2',
         'GFI 3',
         'GFI 4',
-        'GFI Result'
+        'GFI Result',
     ]
 
-    merged_inner_filtered = merged_inner[columns_to_include]
-    merged_inner_path = './merged_inner_filtered.csv'
-    merged_inner_filtered.to_csv(merged_inner_path, index=False)
-    print(f"Inner merge saved to: {merged_inner_path}")
+    header = [[],[]]
+    index = 0
+    for column in columns_to_include_AVQI:
+        if index == math.trunc(len(columns_to_include_AVQI) / 2):
+            header[0].append('AVQI')
+        else:
+            header[0].append('')
+        header[1].append(column)
+        index += 1
+    index = 0
+    header[0].append('')
+    header[1].append('')
+    for name in columns_to_include_GFI:
+        if index == math.trunc(len(columns_to_include_GFI) / 2):
+            header[0].append('GFI')
+        else:
+            header[0].append('')
+        header[1].append(name)
+        index += 1
+    index = 0
+    for name in proc_df.columns.values:
+        if index == math.trunc(len(proc_df.columns.values) / 2):
+            header[0].append('AK')
+            print("AAAAA")
+        else:
+            header[0].append('')
+        if name != "Patient no.":
+            header[1].append(name)
+        else:
+            header[1].append("")
+        index += 1
+
+    print(math.trunc(len(columns_to_include_AVQI) / 2))
+    merged_inner_part_1 = merged_inner[columns_to_include_AVQI].copy()
+    merged_inner_part_2 = merged_inner[columns_to_include_GFI].copy()
+    merged_inner_part_1[''] = None
+    merged_inner_part_2[''] = None
+    merged_inner_filtered = pd.concat([merged_inner_part_1, merged_inner_part_2], axis=1, ignore_index=False)
+    merged_final = pd.merge(merged_inner_filtered, proc_df, on='Patient no.', how='inner')
+    merged_final.columns = pd.MultiIndex.from_arrays(header)
+    print(merged_inner_filtered)
+    merged_final_path = './merged_final_filtered.csv'
+    merged_final.to_csv(merged_final_path, index=False)
+
+    print(f"Inner final merge saved to: {merged_final_path}")
 
 if __name__ == "__main__":
-    file()
-    merge_json_by_id(
-        file1_path="./Database.csv",
-        file2_path="./employees.csv",
-        output_path="merged.json"
-    )
+    # file()
+    merge_json_by_id()
 
 
