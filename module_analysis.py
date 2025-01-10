@@ -1,3 +1,5 @@
+from time import sleep
+
 import utils.numba_cache
 
 import os
@@ -15,6 +17,7 @@ from utils.resize_image import resize_image
 from utils.analyse_audio import get_cochleagram
 from utils.mfcc_image import spectrogram_image, gray_inferno
 from utils.my_voice_analysis import mysp_resample_and_process
+
 
 def load_model(name, network_name, use_gpu, path_model, path_settings, path_checkpoint):
     try:
@@ -49,17 +52,20 @@ def load_model(name, network_name, use_gpu, path_model, path_settings, path_chec
         **settings
     ), settings
 
+
 def calc_svi(AVE, SHI, Vox):
     return 1.425 - float(AVE) * 0.5 + float(SHI) * 0.0625 - float(Vox) * 0.0925
 
 
 def calc_m(AVE, F0, Prob0, Prob1, Prob2):
-    return 180.518 + 295.34 * float(AVE) - 0.3 * float(F0) - 1.876 * (float(Prob2) * 100) - 1.72 * (float(Prob1) * 100) - 0.336 * (float(Prob0) * 100)
+    return 180.518 + 295.34 * float(AVE) - 0.3 * float(F0) - 1.876 * (float(Prob2) * 100) - 1.72 * (
+                float(Prob1) * 100) - 0.336 * (float(Prob0) * 100)
 
 
 # kls_count = cfg.MODEL.DEEPSPEECH.OUTPUT_CLASS - 1
 
-class_model, path_model_class, path_settings_class, path_checkpoint_class, path_model_index, path_settings_index, path_checkpoint_index, dirPath, opath = sys.argv[1:]
+class_model, path_model_class, path_settings_class, path_checkpoint_class, path_model_index, path_settings_index, path_checkpoint_index, dirPath, opath = sys.argv[
+                                                                                                                                                          1:]
 # fpath = os.path.abspath(fpath.replace("\"", ""))
 opath = os.path.abspath(opath.replace("\"", ""))
 sys.argv = [sys.argv[0]]
@@ -100,18 +106,19 @@ for index in arr:
     # cv2.imwrite("./mels.png", image)
     cv2.imwrite("%s/%s-cochs.png" % (os.path.dirname(opath_csv), os.path.splitext(os.path.basename(fpath))[0]), cgram)
 
-
-    network_class, class_settings = load_model("network_class", class_model, True, path_model_class, path_settings_class, path_checkpoint_class)
+    network_class, class_settings = load_model("network_class", class_model, True, path_model_class,
+                                               path_settings_class, path_checkpoint_class)
     kls_count = class_settings["class_count"]
     t_pr = network_class.predict(mfcc).detach().cpu()[0]
     t_kls = torch.softmax(t_pr[..., 0:kls_count], -1).numpy()
     del network_class
 
-    if kls_count == 1: # special binary case
+    if kls_count == 1:  # special binary case
         kls_count = 2
         t_kls = torch.tensor([1 - t_kls[0], t_kls[0]])
 
-    network_index, _ = load_model("network_index", "StrippedNetworkIndex", True, path_model_index, path_settings_index, path_checkpoint_index)
+    network_index, _ = load_model("network_index", "StrippedNetworkIndex", True, path_model_index, path_settings_index,
+                                  path_checkpoint_index)
     t_pr = network_index.predict(mfcc).detach().cpu()[0]
     t_idx = (t_pr * torch.tensor([60, 50])).numpy()
     del network_index
@@ -127,8 +134,8 @@ for index in arr:
     ave_value = str(mysp_res["AVE"]) if "AVE" in mysp_res else "-"
     svi_value = "-" if ave_value == "-" else "%.2f" % calc_svi(ave_value, t_idx[0], t_idx[1])
     f0_value = mysp_res["f0_mean"] if "f0_mean" in mysp_res else "-"
-    m_value = "-" if svi_value == "-" or f0_value == "-" or kls_count < 3 else "%.2f" % calc_m(ave_value, f0_value, *t_kls[0:3])
-
+    m_value = "-" if svi_value == "-" or f0_value == "-" or kls_count < 3 else "%.2f" % calc_m(ave_value, f0_value,
+                                                                                               *t_kls[0:3])
 
     print("Audio belongs to group: '%i'" % t_kls.argmax())
     print("\nConfidence breakdown:")
@@ -166,6 +173,5 @@ for index in arr:
         f.write(svi_value)
         f.write(",")
         f.write(m_value)
-
-
-    os.unlink(".tmp.wav")
+    sleep(0.5)
+    os.remove(".tmp.wav")

@@ -28,9 +28,10 @@ def evaluate_audio(path_diva, path_audio):
 
     try:
         app["Progress"].minimize()
-        while app["Progress"].wait_not("visible", timeout=200):
+        while app["Progress"].wait_not("visible", timeout=400):
             pass
     except Exception as e:
+        print(e)
         print("timed out")
 
     app.kill(soft=False)

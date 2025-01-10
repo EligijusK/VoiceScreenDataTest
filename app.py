@@ -4,7 +4,6 @@ import os
 import random
 import time
 from multiprocessing import Process
-
 import numpy as np
 import requests
 import wave
@@ -43,6 +42,7 @@ def file(voiceDir):
         jsonData = request.json()
         jsonData["timeTook"] = length
         arrData.append(jsonData)
+        time.sleep(0.5)
 
     df = pd.json_normalize(arrData)
     df.rename(columns={'AVQI': 'AVQI '}, inplace=True)
@@ -121,7 +121,7 @@ def merge_json_by_id():
     merged_final = pd.merge(merged_inner_filtered, proc_df, on='Patient no.', how='inner')
     merged_final.columns = pd.MultiIndex.from_arrays(header)
     print(merged_final)
-    merged_final_path = './merged_final_filtered.csv'
+    merged_final_path = './merged_data.csv'
     merged_final.to_csv(merged_final_path, mode='w', index=False)
 
     print(f"Inner final merge saved to: {merged_final_path}")
@@ -145,10 +145,10 @@ if __name__ == "__main__":
                      ]
     arguments = ' '.join(argumentArray)
     print(' '.join(arguments))
+    p2 = Process(target=file, args=[voiceDir])  # LOCAL SERVER MUST BE TURNED ON
+    p2.start()
     p = Process(target=os.system, args=["module_analysis.py " + arguments])
     p.start()
-    p2 = Process(target=file, args=[voiceDir]) # LOCAL SERVER MUST BE TURNED ON
-    p2.start()
     # os.system("module_analysis.py " + arguments)
     # file(voiceDir) # LOCAL SERVER MUST BE TURNED ON
     p.join()

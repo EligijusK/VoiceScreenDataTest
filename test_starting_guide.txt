@@ -1,10 +1,10 @@
-If python in environment doesn't work create new environment
+If python in environment doesn't work create new environment with: python -m venv env
 
 There are one library that is from GitHub
 installation guide for custom library:
 
 1. open terminal in environment
-2. In terminal navigate to folder library (pycochleagram)
+2. In terminal navigate to folder library (pycochleagram): cd pycochleagram
 3. install library in environment with this command: python setup.py install
 
 Install all libraries from win-requirements.txt
@@ -18,3 +18,15 @@ Setup server and test it self:
 4. install libraries for server
 5. launch server
 6. start app.py
+
+If there will be error in base_stripped_network.py find 40, 41 line and change this:
+
+        else:
+            state = torch.load(path_weights)
+            self.model.load_state_dict(state["state_model"])
+
+TO:
+
+        else:
+            state = torch.load(path_weights, map_location=self.device)
+            self.model.load_state_dict(state["state_model"])

@@ -377,6 +377,6 @@ def mysp_resample_and_process(fpath):
     except Exception as e:
         print(traceback.format_exc(), file=sys.stdout)
 
-    # os.unlink("_tmp.wav")
+    # os.unlink(".tmp.wav")
 
     return res
