@@ -74,6 +74,11 @@ def merge_json_by_id():
     ]
 
     columns_to_include_GFI = [
+        'Dgn.',
+        'Gender',
+        'Age',
+        'G',
+        'ABI',
         'GFI 1',
         'GFI 2',
         'GFI 3',
@@ -128,17 +133,17 @@ def merge_json_by_id():
 
 
 if __name__ == "__main__":
-    voiceDir = "C:/Users/eligijus/Documents/Projektai/voice/"
+    voiceDir = "D:/voice/"
     argumentArray = ["StrippedNetworkClass",
-                     "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1653211992/file_copies"
+                     "D:/Projektai/VoiceScreenDataTest/output_models_old/chk_1653211992/file_copies"
                      "/network",
-                     "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1653211992/settings.json",
-                     "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1653211992"
+                     "D:/Projektai/VoiceScreenDataTest/output_models_old/chk_1653211992/settings.json",
+                     "D:/Projektai/VoiceScreenDataTest/output_models_old/chk_1653211992"
                      "/model_best_test.pth",
-                     "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1647178662/file_copies"
+                     "D:/Projektai/VoiceScreenDataTest/output_models_old/chk_1647178662/file_copies"
                      "/network",
-                     "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1647178662/settings.json",
-                     "C:/Users/eligijus/Documents/Projektai/voice-analysis/output_models_old/chk_1647178662"
+                     "D:/Projektai/VoiceScreenDataTest/output_models_old/chk_1647178662/settings.json",
+                     "D:/Projektai/VoiceScreenDataTest/output_models_old/chk_1647178662"
                      "/model_best_test.pth",
                      voiceDir,
                      "Proc_001"
